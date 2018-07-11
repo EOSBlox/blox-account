@@ -53,21 +53,23 @@ class BloxAccount extends PolymerElement {
 
   _makeAccount(){
     if(this.eos && this.ownerPublicKey && this.activePublicKey && this.creatorAccountName && this.newAccountName){
-      this.makeAccount(this.eos, this.ownerPublicKey, this.activePublicKey, this.creatorAccountName, this.newAccountName, this.ramBytes, this.stakeNetQuantity, this.stakeCpuQuantity)
+      this.makeAccount(this.eos, this.ownerPublicKey, this.activePublicKey, this.creatorAccountName, this.newAccountName)
     }
   }
 
 
   makeAccount(eos, ownerPublicKey, activePublicKey, creatorAccountName, newAccountName, ramBytes, stakeNetQuantity, stakeCpuQuantity) {
-    
-    // eos = the eos object created with the provatekey of the creator
-    // ownerPublicKey = 'EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV'
-    // activePublicKey = 'EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV'
-    // creatorAccountName "helloeosblox"
-    // newAccountName = "mynewaccount"
-    // ramBytes = the amount of ram to buy ()
-    // stakeNetQuantity = '0.001 EOS'
-    // stakeCpuQuantity = '0.001 EOS'
+        
+console.log('---- MAKING ACCOUNT ----')
+console.log("eos:" )
+console.log(eos)
+console.log("ownerPublicKey:" +ownerPublicKey)
+console.log("activePublicKey:" +activePublicKey)
+console.log("creatorAccountName:" +creatorAccountName)
+console.log("newAccountName:" +newAccountName)
+console.log("ramBytes: 4000")
+console.log("stakeNetQuantity: '0.001 EOS'")
+console.log("stakeCpuQuantity: '0.001 EOS'")
 
     eos.transaction(tr => {
       tr.newaccount({
@@ -80,14 +82,14 @@ class BloxAccount extends PolymerElement {
       tr.buyrambytes({
         payer: creatorAccountName,
         receiver: newAccountName,
-        bytes: ramBytes || 4000
+        bytes: 4000
       })
 
       tr.delegatebw({
         from: creatorAccountName,
         receiver: newAccountName,
-        stake_net_quantity: stakeNetQuantity || '0.001 EOS',
-        stake_cpu_quantity: stakeCpuQuantity || '0.001 EOS',
+        stake_net_quantity: '0.001 EOS',
+        stake_cpu_quantity: '0.001 EOS',
         transfer: 0
       })
     })
