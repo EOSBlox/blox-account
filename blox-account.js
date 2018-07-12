@@ -23,74 +23,48 @@ class BloxAccount extends PolymerElement {
       eos: {
         type: Object,
       },
-      accountName: {
+      creator: {
         type: String,
       },
-      activePrivateKey: {
+      name: {
         type: String,
       },
-      ownerPrivateKey: {
+      owner: {
         type: String,
       },
-      fundingAccountName: {
+      active: {
         type: String,
-      },
-      fundingPrivateKey: {
-        type: String,
-      },
-      ramBytes: {
-        type: Number,
-      },
-      stakeNetQuantity: {
-        type: String,
-      },
-      stakeCpuQuantity: {
-        type: String,
-      },
+      }
     };
   }
 
-
   _makeAccount(){
-    if(this.eos && this.ownerPublicKey && this.activePublicKey && this.creatorAccountName && this.newAccountName){
-      this.makeAccount(this.eos, this.ownerPublicKey, this.activePublicKey, this.creatorAccountName, this.newAccountName)
+    if(this.eos && this.owner && this.active && this.creator && this.name){
+      this.makeAccount(this.eos, this.creator, this.name, this.owner, this.active)
     }
   }
 
+// CREATOR the acocunt name of the creator 12 charectors
+// NAME is the new account name yoiu want to register 12 charectors
+// OWNER is the public key for the owner account
+// ACTIVE is the public key for the active account
 
-  makeAccount(eos, ownerPublicKey, activePublicKey, creatorAccountName, newAccountName, ramBytes, stakeNetQuantity, stakeCpuQuantity) {
-        
-console.log('---- MAKING ACCOUNT ----')
-console.log("eos:" )
-console.log(eos)
-console.log("ownerPublicKey:" +ownerPublicKey)
-console.log("activePublicKey:" +activePublicKey)
-console.log("creatorAccountName:" +creatorAccountName)
-console.log("newAccountName:" +newAccountName)
-console.log("ramBytes: 4000")
-console.log("stakeNetQuantity: '0.001 EOS'")
-console.log("stakeCpuQuantity: '0.001 EOS'")
-
-    eos.transaction(tr => {
-      tr.newaccount({
-        creator: creatorAccountName,
-        name: newAccountName,
-        owner: ownerPublicKey,
-        active: activePublicKey
+  makeAccount(eos, creator, name, owner, active) {
+    return new Promise((resolve, reject) => {
+      const bytes = 4000;
+      const stake_net_quantity = '0.0010 EOS';
+      const stake_cpu_quantity = '0.0010 EOS';
+      const transfer = 0;
+      eos.transaction(tr => {
+        tr.newaccount(creator, name, owner, active)
+        tr.buyrambytes(creator, name, bytes)
+        tr.delegatebw(creator, name, stake_net_quantity, stake_cpu_quantity, transfer)
       })
-
-      tr.buyrambytes({
-        payer: creatorAccountName,
-        receiver: newAccountName,
-        bytes: 4000
+      .then((response) => {
+        resolve(response)
       })
-
-      tr.delegatebw({
-        from: creatorAccountName,
-        receiver: newAccountName,
-        stake_net_quantity: '0.001 EOS',
-        stake_cpu_quantity: '0.001 EOS',
-        transfer: 0
+      .catch((err) => {
+        reject(err)
       })
     })
   }
