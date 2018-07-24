@@ -49,19 +49,19 @@ class BloxAccount extends PolymerElement {
 // OWNER is the public key for the owner account
 // ACTIVE is the public key for the active account
 
-  makeAccount(eos, creator, name, owner, active) {
+  makeAccount(eos, creator, name, owner, active, bytesIn, stakeNetQuantityIn, stakeCpuQuantityIn, transferIn) {
     return new Promise((resolve, reject) => {
-      const bytes = 4000;
-      const stake_net_quantity = '0.0010 EOS';
-      const stake_cpu_quantity = '0.0010 EOS';
-      const transfer = 0;
+      const bytes = bytesIn || 7000;
+      const stake_net_quantity = stakeNetQuantityIn + ' EOS' ||'0.1000 EOS';
+      const stake_cpu_quantity = stakeCpuQuantityIn + ' EOS' || '0.2000 EOS';
+      const transfer = transferIn || 0;
       eos.transaction(tr => {
         tr.newaccount(creator, name, owner, active)
         tr.buyrambytes(creator, name, bytes)
         tr.delegatebw(creator, name, stake_net_quantity, stake_cpu_quantity, transfer)
       })
       .then((response) => {
-        resolve(response)
+        resolve(response.transaction_id)
       })
       .catch((err) => {
         reject(err)
