@@ -51,10 +51,36 @@ class BloxAccount extends PolymerElement {
 
   makeAccount(eos, creator, name, owner, active, bytesIn, stakeNetQuantityIn, stakeCpuQuantityIn, transferIn) {
     return new Promise((resolve, reject) => {
-      const bytes = bytesIn || 7000;
-      const stake_net_quantity = stakeNetQuantityIn + ' EOS' ||'0.1000 EOS';
-      const stake_cpu_quantity = stakeCpuQuantityIn + ' EOS' || '0.2000 EOS';
-      const transfer = transferIn || 0;
+      var netCountDecimal = stakeNetQuantityIn.split(".");
+      if(netCountDecimal[1].length === 0){
+        stakeNetQuantityIn = stakeNetQuantityIn+'.0000'
+      } else if (netCountDecimal[1].length === 1){
+        stakeNetQuantityIn = stakeNetQuantityIn+'000'
+      } else if (netCountDecimal[1].length === 2){
+        stakeNetQuantityIn = stakeNetQuantityIn+'00'
+      } else if (netCountDecimal[1].length === 3){
+        stakeNetQuantityIn = stakeNetQuantityIn+'0'
+      }
+      var cpuCountDecimal = stakeCpuQuantityIn.split(".");
+      if(cpuCountDecimal[1].length === 0){
+        stakeCpuQuantityIn = stakeCpuQuantityIn+'.0000'
+      } else if (cpuCountDecimal[1].length === 1){
+        stakeCpuQuantityIn = stakeCpuQuantityIn+'000'
+      } else if (cpuCountDecimal[1].length === 2){
+        stakeCpuQuantityIn = stakeCpuQuantityIn+'00'
+      } else if (cpuCountDecimal[1].length === 3){
+        stakeCpuQuantityIn = stakeCpuQuantityIn+'0'
+      }
+
+      const bytes = parseInt(bytesIn) || 7000;
+      const stake_net_quantity = stakeNetQuantityIn +' EOS' ||'0.1000 EOS';
+      const stake_cpu_quantity = stakeCpuQuantityIn +' EOS' || '0.2000 EOS';
+      const transfer = parseInt(transferIn) || 0;
+      console.log(creator)
+      console.log(name)
+      console.log(stake_net_quantity)
+      console.log(stake_cpu_quantity)
+      console.log(transfer)
       eos.transaction(tr => {
         tr.newaccount(creator, name, owner, active)
         tr.buyrambytes(creator, name, bytes)
