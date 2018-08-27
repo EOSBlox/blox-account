@@ -38,15 +38,15 @@ class BloxAccount extends PolymerElement {
     };
   }
 
-  _accountNameExists(accountName){
+  exists(eos, accountName){
     return new Promise((resolve, reject) => {
-      if(this.eos && accountName){
+      if(eos && accountName){
         eos.getAccount(accountName)
         .then((response) => {
-          resolve(response);
+          resolve(true);
         })
         .catch((err) => {
-          reject(err);
+          resolve(false);
         })
       } else {
         reject('Missing Arguments');
