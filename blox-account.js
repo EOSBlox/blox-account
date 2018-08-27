@@ -38,6 +38,22 @@ class BloxAccount extends PolymerElement {
     };
   }
 
+  _accountNameExists(accountName){
+    return new Promise((resolve, reject) => {
+      if(this.eos && accountName){
+        eos.getAccount(accountName)
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((err) => {
+          reject(err);
+        })
+      } else {
+        reject('Missing Arguments');
+      }
+    })
+  }
+
   _makeAccount(){
     if(this.eos && this.owner && this.active && this.creator && this.name){
       this.makeAccount(this.eos, this.creator, this.name, this.owner, this.active)
@@ -51,6 +67,7 @@ class BloxAccount extends PolymerElement {
 
   makeAccount(eos, creator, name, owner, active, bytesIn, stakeNetQuantityIn, stakeCpuQuantityIn, transferIn) {
     return new Promise((resolve, reject) => {
+      //stakeNetQuantityIn += (netCountDecimal[1].length === 0 ? "." : "") + "0".repeat(4 - netCountDecimal[1].length)
       var netCountDecimal = stakeNetQuantityIn.split(".");
       if(netCountDecimal[1].length === 0){
         stakeNetQuantityIn = stakeNetQuantityIn+'.0000'
